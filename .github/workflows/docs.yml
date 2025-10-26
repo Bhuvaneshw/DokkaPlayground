@@ -55,15 +55,15 @@ jobs:
       - name: Build Dokka HTML Docs
         run: |
           chmod +x ./gradlew
-          ./gradlew dokkaGenerate -Prelease-version=${{ steps.setup_version.outputs.version }} -PdocsDir=build/docs
+          ./gradlew dokkaGenerate -Prelease-version=${{ steps.setup_version.outputs.version }} -PdocsDir=build/docs/v
 
       - name: Setup folder structure
         id: prep
         shell: bash
         run: |
           VERSION=${{ steps.setup_version.outputs.version }}
-          mkdir -p docs/$VERSION
-          cp -r build/docs/$VERSION/* docs/$VERSION/
+          mkdir -p docs/v/$VERSION
+          cp -r build/docs/$VERSION/* docs/v/$VERSION/
           rm -rf docs/latest
           mkdir -p docs/latest
           cp -r build/docs/$VERSION/* docs/latest/
