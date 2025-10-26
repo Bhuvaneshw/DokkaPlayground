@@ -52,17 +52,17 @@ jobs:
       - name: Build Dokka HTML Docs
         run: |
           chmod +x ./gradlew
-          ./gradlew dokkaGenerate -Prelease-version=${{ steps.setup_version.outputs.version }} -PdocsDir=docs/build
+          ./gradlew dokkaGenerate -Prelease-version=${{ steps.setup_version.outputs.version }} -PdocsDir=build/docs
 
       - name: Setup folder structure
         id: prep
         shell: bash
         run: |
           VERSION=${{ steps.setup_version.outputs.version }}
-          cp -r docs/build/$VERSION docs/$VERSION
+          cp -r build/docs/$VERSION docs/$VERSION
           rm -rf docs/latest
           mkdir -p docs/latest
-          cp -r docs/build/$VERSION/* docs/latest
+          cp -r build/docs/$VERSION/* docs/latest
 
       - name: Add index redirect
         run: |
