@@ -50,7 +50,13 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone --branch gh-pages --single-branch https://x-access-token:${{ secrets.GH_ACTION_FULL_REPO }}@github.com/${{ github.repository }} docs || true
+          if git ls-remote --exit-code https://x-access-token:${{ secrets.GH_ACTION_FULL_REPO }}@github.com/${{ github.repository }} gh-pages; then
+            git clone --branch gh-pages --single-branch https://x-access-token:${{ secrets.GH_ACTION_FULL_REPO }}@github.com/${{ github.repository }} gh-pages
+            mkdir -p build/docs/v
+            cp -r gh-pages/v/* build/docs/v/ 2>/dev/null || true
+          else
+            mkdir -p build/docs/v
+          fi
 
       - name: Build Dokka HTML Docs
         run: |
@@ -63,10 +69,10 @@ jobs:
         run: |
           VERSION=${{ steps.setup_version.outputs.version }}
           mkdir -p docs/v/$VERSION
-          cp -r build/docs/$VERSION/* docs/v/$VERSION/
+          cp -r build/docs/v/$VERSION/* docs/v/$VERSION/
           rm -rf docs/latest
           mkdir -p docs/latest
-          cp -r build/docs/$VERSION/* docs/latest/
+          cp -r build/docs/v/$VERSION/* docs/latest/
 
       - name: Add index redirect
         run: |
