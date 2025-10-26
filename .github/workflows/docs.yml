@@ -62,10 +62,11 @@ jobs:
         shell: bash
         run: |
           VERSION=${{ steps.setup_version.outputs.version }}
-          cp -r build/docs/$VERSION docs/$VERSION
+          mkdir -p docs/$VERSION
+          cp -r build/docs/$VERSION/* docs/$VERSION/
           rm -rf docs/latest
           mkdir -p docs/latest
-          cp -r build/docs/$VERSION/* docs/latest
+          cp -r build/docs/$VERSION/* docs/latest/
 
       - name: Add index redirect
         run: |
