@@ -76,7 +76,7 @@ jobs:
 
       - name: Add index redirect
         run: |
-          echo '<meta http-equiv="refresh" content="0; url=latest/">' > docs/index.html
+          echo "<meta http-equiv=\"refresh\" content=\"0; url=latest/?v=$(date +%s)\">" > docs/index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
