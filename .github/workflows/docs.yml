@@ -36,14 +36,14 @@ jobs:
         run: |
           if [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
-            echo "Using version from tag"
+            SOURCE="tag"
           else
             VERSION=${{ github.event.inputs.version }}
-            echo "Using version from input"
+            SOURCE="input"
           fi
           VERSION=${VERSION#v}
+          echo "Using version $VERSION from $SOURCE"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Using version: $VERSION"
 
       - name: Pull existing gh-pages
         shell: bash
