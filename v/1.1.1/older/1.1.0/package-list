@@ -1,0 +1,7 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:core
+com.bhuvaneshw.dokkaplayground.core
+module:ui
+com.bhuvaneshw.dokkaplayground.ui
