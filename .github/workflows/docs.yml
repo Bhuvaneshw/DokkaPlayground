@@ -70,13 +70,13 @@ jobs:
           VERSION=${{ steps.setup_version.outputs.version }}
           mkdir -p docs/v/$VERSION
           cp -r build/docs/v/$VERSION/* docs/v/$VERSION/
-          rm -rf docs/latest
-          mkdir -p docs/latest
-          cp -r build/docs/v/$VERSION/* docs/latest/
+#          rm -rf docs/latest
+#          mkdir -p docs/latest
+#          cp -r build/docs/v/$VERSION/* docs/latest/
 
       - name: Add index redirect
         run: |
-          echo "<meta http-equiv=\"refresh\" content=\"0; url=latest/?v=$(date +%s)\">" > docs/index.html
+          echo "<meta http-equiv=\"refresh\" content=\"0; url=v/${{ steps.setup_version.outputs.version }}/\">" > docs/index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
