@@ -51,3 +51,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+dokka {
+    dokkaSourceSets.configureEach {
+        includes.from(project.files(), "module.md")
+    }
+    pluginsConfiguration.html {
+        footerMessage.set("By Bhuvaneshwaran")
+    }
+}

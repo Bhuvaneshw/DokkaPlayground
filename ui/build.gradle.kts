@@ -56,8 +56,8 @@ dependencies {
 dokka {
     dokkaSourceSets.configureEach {
         includes.from(project.files(), "module.md")
-        pluginsConfiguration.html {
-            footerMessage.set("By Bhuvaneshwaran")
-        }
+    }
+    pluginsConfiguration.html {
+        footerMessage.set("By Bhuvaneshwaran")
     }
 }

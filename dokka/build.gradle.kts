@@ -1,17 +1,20 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.dokka)
 }
 
+/*
+ * allow custom properties from cli arg. helpful for CI/CD
+ * sample cmd: ./gradlew dokkaGenerate -Prelease-version=1.0.0 -PdocsDir=build/docs
+ */
 val apiVersion: String = if (project.hasProperty("release-version")) {
     project.property("release-version")!!.toString()
 } else {
     project.version.toString()
 }
-val dokkaVersionsDirectory = resolveVersionsDirectory()
+val dokkaVersionsDirectory = run {
+    val outputDirectory = providers.gradleProperty("docsDir").orNull
+    return@run outputDirectory?.let(rootDir::resolve)
+}
 
 dokka {
     moduleName = "DokkaPlayground"
@@ -20,6 +23,11 @@ dokka {
         versioning {
             version = apiVersion
             if (dokkaVersionsDirectory != null) olderVersionsDir = dokkaVersionsDirectory
+            // TODO: set olderVersionsDirName to empty string
+//            olderVersionsDirName = ""
+//            waiting for this property to be release in dokka
+//            property is in source but not yet released (checked v: 2.1.0)
+            renderVersionsNavigationOnAllPages = true
         }
         pluginsConfiguration.html {
             footerMessage.set("By Bhuvaneshwaran")
@@ -32,49 +40,10 @@ dokka {
     }
 }
 
-android {
-    namespace = "com.bhuvaneshw.dokkaplayground.dokka"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
-    }
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
-}
-
 dependencies {
+    // include all modules that's need to be documented
     dokka(project(":core"))
     dokka(project(":ui"))
-    dokkaHtmlPlugin(libs.dokka.versioning.plugin)
-}
 
-fun resolveVersionsDirectory(): File? {
-    val outputDirectory = providers.gradleProperty("docsDir").orNull
-    return outputDirectory?.let(rootDir::resolve)
+    dokkaHtmlPlugin(libs.dokka.versioning.plugin)
 }
